@@ -1,0 +1,178 @@
+import random
+import time
+import threading
+
+# ✅ Chemistry Questions
+chemistry = [
+    {"question": "Which method is suitable for preparing a soluble salt from an acid and an insoluble base?",
+     "options": ["Precipitation", "Excess base method", "Crystallization", "Titration"], "answer": 1},
+    {"question": "Which gas turns damp red litmus paper blue?",
+     "options": ["Sulfur dioxide", "Hydrogen", "Carbon dioxide", "Ammonia"], "answer": 3},
+    {"question": "What is the correct observation when aqueous sodium hydroxide is added to copper(II) sulfate solution?",
+     "options": ["Green precipitate forms", "White precipitate forms", "No visible change", "Blue precipitate forms"], "answer": 3},
+    {"question": "Which of the following is a weak alkali?",
+     "options": ["Sodium hydroxide", "Ammonia solution", "Potassium hydroxide", "Calcium hydroxide"], "answer": 1},
+    {"question": "Which salt is prepared by reacting hydrochloric acid with zinc oxide?",
+     "options": ["Zinc sulfate", "Zinc carbonate", "Zinc chloride", "Zinc nitrate"], "answer": 2},
+]
+
+# ✅ Biology Questions
+biology = [
+    {"question": "Which blood vessel carries oxygenated blood from the lungs to the heart?",
+     "options": ["Pulmonary artery", "Pulmonary vein", "Aorta", "Vena cava"], "answer": 1},
+    {"question": "Which component of blood helps in clotting?",
+     "options": ["Red blood cells", "White blood cells", "Platelets", "Plasma"], "answer": 2},
+    {"question": "Which organ pumps blood throughout the body?",
+     "options": ["Lungs", "Kidneys", "Heart", "Liver"], "answer": 2},
+    {"question": "Which blood vessel has valves to prevent backflow?",
+     "options": ["Arteries", "Veins", "Capillaries", "Aorta"], "answer": 1},
+    {"question": "Which gas is produced during aerobic respiration?",
+     "options": ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"], "answer": 1},
+]
+
+# ✅ Boss Questions (Mixed)
+boss_quiz = [
+    {"question": "What is the color of the precipitate formed when iron(III) ions react with sodium hydroxide?",
+     "options": ["Green", "Brown", "Blue", "White"], "answer": 1},
+    {"question": "Which gas relights a glowing splint?",
+     "options": ["Hydrogen", "Carbon dioxide", "Oxygen", "Nitrogen"], "answer": 2},
+    {"question": "What organ stores urine before excretion?",
+     "options": ["Liver", "Bladder", "Kidney", "Ureter"], "answer": 1},
+    {"question": "Which compound is used as a drying agent and a base?",
+     "options": ["Hydrochloric acid", "Calcium oxide", "Ammonia", "Sulfur dioxide"], "answer": 1},
+    {"question": "Which blood component fights infection?",
+     "options": ["Red blood cells", "Platelets", "Plasma", "White blood cells"], "answer": 3}
+]
+
+random.shuffle(chemistry)
+random.shuffle(biology)
+random.shuffle(boss_quiz)
+
+# 🎬 Intro
+def intro():
+    print("🔮 Welcome to...")
+    time.sleep(1)
+    print("🕸️  SHANTI'S DUNGEON 🕸️")
+    time.sleep(2)
+    print("\nYou awaken in a dimly lit dungeon filled with strange symbols.")
+    print("A voice echoes: 'To escape, you must prove your mastery of knowledge!'")
+    print("You have 3 ❤️ lives. Lose them all, and you will remain here forever... 😈\n")
+    time.sleep(2)
+
+# 🧪 Quiz Engine
+def run_quiz(quiz, subject_name):
+    score = 0
+    lives = 3
+    for i, q in enumerate(quiz, 1):
+        print(f"\n🧪 Gate {i} - {subject_name} Challenge")
+        print(f"{q['question']}")
+        for idx, option in enumerate(q['options']):
+            print(f"  {idx + 1}. {option}")
+        while True:
+            answer = input("Choose your answer (1-4): ")
+            if answer not in ['1', '2', '3', '4']:
+                print("⚠️ Enter a valid number between 1 and 4.")
+                continue
+            answer = int(answer) - 1
+            if answer == q['answer']:
+                print("✅ Correct! The gate opens...")
+                score += 1
+                time.sleep(1)
+            else:
+                correct = q['options'][q['answer']]
+                print(f"❌ Wrong! The dungeon growls. Correct answer: {correct}")
+                lives -= 1
+                print(f"💔 Lives remaining: {lives}")
+                time.sleep(1)
+            break
+        if lives == 0:
+            print("\n💀 You've lost all your lives. The dungeon consumes your soul... GAME OVER.")
+            return False
+    print(f"\n🎉 You passed all the {subject_name} gates!")
+    print(f"🏆 Score: {score}/{len(quiz)}")
+    return True
+
+# ⏱️ Timer Input for Rapid Fire
+def timed_input(prompt, timeout=10):
+    result = [None]
+    def get_input():
+        result[0] = input(prompt)
+    thread = threading.Thread(target=get_input)
+    thread.start()
+    thread.join(timeout)
+    if thread.is_alive():
+        print("\n⏰ Time's up!")
+        return None
+    return result[0]
+
+# 🔥 Boss Fight (Rapid Fire Mode)
+def fight_boss():
+    print("\n🔥 A towering figure emerges from the shadows...")
+    time.sleep(1)
+    print("💀 'I am Shanti, the keeper of this dungeon!'")
+    print("🧙‍♀️ 'Only those worthy may leave. Answer my riddles... in 10 seconds each!'")
+    time.sleep(2)
+
+    score = 0
+    for i, q in enumerate(boss_quiz, 1):
+        print(f"\n⚔️ Rapid Fire Question {i}: {q['question']}")
+        for idx, option in enumerate(q['options']):
+            print(f"  {idx + 1}. {option}")
+
+        answer = timed_input("⏱️ Your answer (1-4): ", timeout=10)
+        if not answer or answer not in ['1', '2', '3', '4']:
+            print("❌ No valid answer received.")
+            continue
+
+        answer = int(answer) - 1
+        if answer == q['answer']:
+            print("✅ Correct! Shanti trembles...")
+            input("Press enter to continue")
+            score += 1
+        else:
+            print(f"❌ Wrong! Correct answer: {q['options'][q['answer']]}")
+            input("Press enter to continue")
+
+    print(f"\n🏁 Rapid Fire Complete! You got {score}/5 right.")
+    if score >= 3:
+        print("🌟 You have defeated Shanti!")
+        print("🔓 The dungeon gates open... You're free!")
+        print("🎉 CONGRATULATIONS, HERO!")
+    else:
+        print("💀 Shanti laughs: 'You are not ready!'")
+        print("🔒 The dungeon seals itself. You are trapped forever...")
+        print("GAME OVER.")
+
+# 🎮 Main Game Loop
+def game():
+    intro()
+    while True:
+        print("\nWhich path will you take?")
+        print(" 1. The Alchemist's Corridor (Chemistry)")
+        print(" 2. The Healer's Hall (Biology)")
+        print(" 0. Surrender and Exit")
+        choice = input("Choose your path (0–2): ")
+
+        if choice == '1':
+            survived = run_quiz(chemistry, "Chemistry")
+            if survived:
+                print("\n✨ You escape the Alchemist's Corridor!")
+                fight_boss()
+            break
+        elif choice == '2':
+            survived = run_quiz(biology, "Biology")
+            if survived:
+                print("\n🧝 You escape the Healer's Hall!")
+                fight_boss()
+            break
+        elif choice == '0':
+            print("\nYou sit down and accept your fate in the dungeon...")
+            print("The voice whispers: 'Perhaps another time...' 👻")
+            break
+        else:
+            print("⚠️ Invalid choice. Try again.")
+
+# 🕹️ Run the Game
+if __name__ == "__main__":
+    game()
+
